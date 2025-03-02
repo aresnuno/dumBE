@@ -12,7 +12,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    new_user = models.User(email=user.email, full_name=user.full_name)
+    new_user = models.User(email=user.email, name=user.name)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -36,7 +36,7 @@ def update_user(user_id: int, user: schemas.UserCreate, db: Session = Depends(ge
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     db_user.email = user.email
-    db_user.full_name = user.full_name
+    db_user.name = user.name
     db.commit()
     db.refresh(db_user)
     return db_user
