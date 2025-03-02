@@ -4,6 +4,7 @@ from api.routes.articles import router as articles_router
 from fastapi.middleware.cors import CORSMiddleware
 import models
 # In a Python script or FastAPI startup
+import time
 from database import engine, Base
 import shutil
 import os
@@ -40,7 +41,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @app.post("/upload/")
 async def upload_file(file: UploadFile = File(...)):
-    file_location = f"{UPLOAD_DIR}/{file.filename}"
+    file_location = f"{UPLOAD_DIR}/{int(time.time())}_{file.filename}"
     
     with open(file_location, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
